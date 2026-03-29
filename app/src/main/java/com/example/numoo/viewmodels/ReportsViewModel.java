@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.numoo.firebase.FirestoreHelper;
+import com.example.numoo.supabase.SupabaseDbHelper;
 import com.example.numoo.models.UsageData;
 
 import java.util.ArrayList;
@@ -19,11 +19,11 @@ public class ReportsViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     private final MutableLiveData<String> error = new MutableLiveData<>();
 
-    private final FirestoreHelper firestoreHelper;
+    private final SupabaseDbHelper firestoreHelper;
 
     public ReportsViewModel(@NonNull Application application) {
         super(application);
-        firestoreHelper = new FirestoreHelper(application);
+        firestoreHelper = new SupabaseDbHelper(application);
     }
 
     public LiveData<List<UsageData>> getReportData() { return reportData; }
@@ -33,7 +33,7 @@ public class ReportsViewModel extends AndroidViewModel {
     public void loadReportForUser(String userId, String date) {
         isLoading.setValue(true);
         firestoreHelper.getUsageDataForDate(userId, date,
-            new FirestoreHelper.FirestoreCallback<List<UsageData>>() {
+            new SupabaseDbHelper.FirestoreCallback<List<UsageData>>() {
                 @Override
                 public void onSuccess(List<UsageData> result) {
                     reportData.postValue(result != null ? result : new ArrayList<>());
@@ -48,3 +48,4 @@ public class ReportsViewModel extends AndroidViewModel {
             });
     }
 }
+

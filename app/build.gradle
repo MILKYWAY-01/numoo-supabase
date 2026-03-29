@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
-    id 'com.google.gms.google-services'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.22'
 }
 
 android {
@@ -25,17 +26,45 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 }
 
 dependencies {
-    // Firebase BOM
-    implementation platform('com.google.firebase:firebase-bom:32.7.0')
-    implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-firestore'
-    implementation 'com.google.firebase:firebase-messaging'
+    // Kotlin
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.22"
+
+    // Supabase
+    implementation platform('io.github.jan-tennert.supabase:bom:2.2.3')
+    implementation 'io.github.jan-tennert.supabase:gotrue-kt'
+    implementation 'io.github.jan-tennert.supabase:postgrest-kt'
+    implementation 'io.github.jan-tennert.supabase:realtime-kt'
+    
+    // Ktor Client for Supabase
+    // NOTE: Ktor Android engine does NOT support WebSockets, which breaks Supabase Realtime
+    // (Engine doesn't support WebSocketCapability). OkHttp engine does.
+    implementation 'io.ktor:ktor-client-okhttp:2.3.8'
+    implementation 'io.ktor:ktor-client-content-negotiation:2.3.8'
+    implementation 'io.ktor:ktor-serialization-kotlinx-json:2.3.8'
+    implementation 'io.ktor:ktor-client-websockets:2.3.8'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
 
     // AndroidX
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -46,9 +75,9 @@ dependencies {
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
 
     // Lifecycle (MVVM)
-    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
 
     // MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'

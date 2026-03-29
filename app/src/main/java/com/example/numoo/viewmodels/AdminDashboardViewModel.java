@@ -7,8 +7,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.numoo.firebase.FirebaseAuthHelper;
-import com.example.numoo.firebase.FirestoreHelper;
+import com.example.numoo.supabase.SupabaseAuthHelper;
+import com.example.numoo.supabase.SupabaseDbHelper;
 import com.example.numoo.models.User;
 
 import java.util.ArrayList;
@@ -21,13 +21,13 @@ public class AdminDashboardViewModel extends AndroidViewModel {
     private final MutableLiveData<String> error = new MutableLiveData<>();
     private final MutableLiveData<String> adminCode = new MutableLiveData<>();
 
-    private final FirestoreHelper firestoreHelper;
-    private final FirebaseAuthHelper authHelper;
+    private final SupabaseDbHelper firestoreHelper;
+    private final SupabaseAuthHelper authHelper;
 
     public AdminDashboardViewModel(@NonNull Application application) {
         super(application);
-        firestoreHelper = new FirestoreHelper(application);
-        authHelper = new FirebaseAuthHelper(application);
+        firestoreHelper = new SupabaseDbHelper(application);
+        authHelper = new SupabaseAuthHelper(application);
     }
 
     public LiveData<List<User>> getLinkedUsers() { return linkedUsers; }
@@ -49,7 +49,7 @@ public class AdminDashboardViewModel extends AndroidViewModel {
         }
 
         // Load admin code
-        firestoreHelper.getUserInfo(uid, new FirestoreHelper.FirestoreCallback<User>() {
+        firestoreHelper.getUserInfo(uid, new SupabaseDbHelper.FirestoreCallback<User>() {
             @Override
             public void onSuccess(User result) {
                 if (result != null && result.getAdminCode() != null) {
@@ -63,7 +63,7 @@ public class AdminDashboardViewModel extends AndroidViewModel {
             }
         });
 
-        firestoreHelper.getLinkedUsers(uid, new FirestoreHelper.FirestoreCallback<List<User>>() {
+        firestoreHelper.getLinkedUsers(uid, new SupabaseDbHelper.FirestoreCallback<List<User>>() {
             @Override
             public void onSuccess(List<User> result) {
                 linkedUsers.postValue(result != null ? result : new ArrayList<>());
@@ -82,3 +82,4 @@ public class AdminDashboardViewModel extends AndroidViewModel {
         authHelper.logout();
     }
 }
+

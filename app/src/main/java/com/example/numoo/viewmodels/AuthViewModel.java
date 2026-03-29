@@ -7,18 +7,18 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.numoo.firebase.FirebaseAuthHelper;
+import com.example.numoo.supabase.SupabaseAuthHelper;
 
 public class AuthViewModel extends AndroidViewModel {
 
-    private final FirebaseAuthHelper authHelper;
+    private final SupabaseAuthHelper authHelper;
     private final MutableLiveData<String> authResult = new MutableLiveData<>();
     private final MutableLiveData<String> authError = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
 
     public AuthViewModel(@NonNull Application application) {
         super(application);
-        authHelper = new FirebaseAuthHelper(application);
+        authHelper = new SupabaseAuthHelper(application);
     }
 
     public LiveData<String> getAuthResult() { return authResult; }
@@ -35,7 +35,7 @@ public class AuthViewModel extends AndroidViewModel {
 
     public void login(String email, String password) {
         isLoading.setValue(true);
-        authHelper.login(email, password, new FirebaseAuthHelper.AuthCallback() {
+        authHelper.login(email, password, new SupabaseAuthHelper.AuthCallback() {
             @Override
             public void onSuccess(String role) {
                 isLoading.postValue(false);
@@ -52,7 +52,7 @@ public class AuthViewModel extends AndroidViewModel {
 
     public void registerAdmin(String name, String username, String email, String password) {
         isLoading.setValue(true);
-        authHelper.registerAdmin(name, username, email, password, new FirebaseAuthHelper.AuthCallback() {
+        authHelper.registerAdmin(name, username, email, password, new SupabaseAuthHelper.AuthCallback() {
             @Override
             public void onSuccess(String adminCode) {
                 isLoading.postValue(false);
@@ -71,7 +71,7 @@ public class AuthViewModel extends AndroidViewModel {
                              String password, String adminCode) {
         isLoading.setValue(true);
         authHelper.registerUser(name, username, email, password, adminCode,
-            new FirebaseAuthHelper.AuthCallback() {
+            new SupabaseAuthHelper.AuthCallback() {
                 @Override
                 public void onSuccess(String message) {
                     isLoading.postValue(false);
@@ -90,3 +90,4 @@ public class AuthViewModel extends AndroidViewModel {
         authHelper.logout();
     }
 }
+

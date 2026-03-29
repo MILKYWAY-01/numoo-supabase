@@ -9,8 +9,8 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
 import com.example.numoo.activities.BlockActivity;
-import com.example.numoo.firebase.FirebaseAuthHelper;
-import com.example.numoo.firebase.FirestoreHelper;
+import com.example.numoo.supabase.SupabaseAuthHelper;
+import com.example.numoo.supabase.SupabaseDbHelper;
 import com.example.numoo.models.AppLimit;
 import com.example.numoo.models.UsageData;
 
@@ -24,8 +24,8 @@ public class AppBlockerService extends AccessibilityService {
     private static final String TAG = "AppBlockerService";
     private static final long CHECK_INTERVAL = 10 * 1000; // 10 seconds
 
-    private FirestoreHelper firestoreHelper;
-    private FirebaseAuthHelper authHelper;
+    private SupabaseDbHelper firestoreHelper;
+    private SupabaseAuthHelper authHelper;
     private Handler handler;
     private Runnable checkRunnable;
     private String currentForegroundPackage = "";
@@ -37,8 +37,8 @@ public class AppBlockerService extends AccessibilityService {
     public void onCreate() {
         super.onCreate();
         try {
-            firestoreHelper = new FirestoreHelper(this);
-            authHelper = new FirebaseAuthHelper(this);
+            firestoreHelper = new SupabaseDbHelper(this);
+            authHelper = new SupabaseAuthHelper(this);
             handler = new Handler(Looper.getMainLooper());
             
             startListeningToLimits();
@@ -52,7 +52,7 @@ public class AppBlockerService extends AccessibilityService {
         String uid = authHelper.getCurrentUid();
         if (uid == null) return;
 
-        firestoreHelper.listenToLimits(uid, new FirestoreHelper.FirestoreCallback<List<AppLimit>>() {
+        firestoreHelper.listenToLimits(uid, new SupabaseDbHelper.FirestoreCallback<List<AppLimit>>() {
             @Override
             public void onSuccess(List<AppLimit> result) {
                 appLimitsMap.clear();
@@ -85,8 +85,8 @@ public class AppBlockerService extends AccessibilityService {
         String uid = authHelper.getCurrentUid();
         if (uid == null) return;
 
-        firestoreHelper.getUsageDataForDate(uid, FirestoreHelper.getTodayDate(), 
-            new FirestoreHelper.FirestoreCallback<List<UsageData>>() {
+        firestoreHelper.getUsageDataForDate(uid, SupabaseDbHelper.getTodayDate(), 
+            new SupabaseDbHelper.FirestoreCallback<List<UsageData>>() {
                 @Override
                 public void onSuccess(List<UsageData> result) {
                     currentUsageMap.clear();
@@ -176,3 +176,4 @@ public class AppBlockerService extends AccessibilityService {
         firestoreHelper.removeLimitsListener();
     }
 }
+

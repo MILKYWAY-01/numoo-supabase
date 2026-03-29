@@ -15,7 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.numoo.R;
 import com.example.numoo.adapters.AppUsageAdapter;
-import com.example.numoo.firebase.FirebaseAuthHelper;
+import com.example.numoo.supabase.SupabaseAuthHelper;
 import com.example.numoo.services.UsageTrackingService;
 import com.example.numoo.viewmodels.UserDashboardViewModel;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -70,7 +70,7 @@ public class UserDashboardActivity extends AppCompatActivity {
         swipeRefresh.setOnRefreshListener(() -> viewModel.refreshData());
 
         btnLogout.setOnClickListener(v -> {
-            new FirebaseAuthHelper(this).logout();
+            new SupabaseAuthHelper(this).logout();
             startActivity(new Intent(this, RoleSelectionActivity.class));
             finishAffinity();
         });
@@ -153,3 +153,4 @@ public class UserDashboardActivity extends AppCompatActivity {
         return minutes + "m";
     }
 }
+

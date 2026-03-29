@@ -8,7 +8,7 @@ import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.numoo.R;
-import com.example.numoo.firebase.FirebaseAuthHelper;
+import com.example.numoo.supabase.SupabaseAuthHelper;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -28,7 +28,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void checkAuthState() {
         try {
-            FirebaseAuthHelper authHelper = new FirebaseAuthHelper(this);
+            SupabaseAuthHelper authHelper = new SupabaseAuthHelper(this);
 
             if (authHelper.isLoggedIn()) {
                 String role = authHelper.getCachedRole();
@@ -36,7 +36,7 @@ public class SplashActivity extends AppCompatActivity {
                     navigateByRole(role);
                 } else {
                     // Fetch role from Firestore
-                    authHelper.getUserRole(new FirebaseAuthHelper.RoleCallback() {
+                    authHelper.getUserRole(new SupabaseAuthHelper.RoleCallback() {
                         @Override
                         public void onRoleFound(String role) {
                             navigateByRole(role);
@@ -72,3 +72,4 @@ public class SplashActivity extends AppCompatActivity {
         finish();
     }
 }
+

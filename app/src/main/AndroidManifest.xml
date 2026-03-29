@@ -106,14 +106,7 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
-        <!-- FCM Service -->
-        <service
-            android:name=".firebase.FCMHelper"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+
 
         <!-- ========== RECEIVERS ========== -->
 

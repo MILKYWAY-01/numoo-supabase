@@ -14,8 +14,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.numoo.R;
 import com.example.numoo.adapters.UserDetailAdapter;
-import com.example.numoo.firebase.FirebaseAuthHelper;
-import com.example.numoo.firebase.FirestoreHelper;
+import com.example.numoo.supabase.SupabaseAuthHelper;
+import com.example.numoo.supabase.SupabaseDbHelper;
 import com.example.numoo.models.AppLimit;
 import com.example.numoo.models.UsageData;
 
@@ -27,7 +27,7 @@ public class UserDetailActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefresh;
     private UserDetailAdapter adapter;
-    private FirestoreHelper firestoreHelper;
+    private SupabaseDbHelper firestoreHelper;
     private TextView tvUserName, tvUsername;
     private String userId, userName, username;
 
@@ -41,7 +41,7 @@ public class UserDetailActivity extends AppCompatActivity {
             userName = getIntent().getStringExtra("userName");
             username = getIntent().getStringExtra("username");
 
-            firestoreHelper = new FirestoreHelper(this);
+            firestoreHelper = new SupabaseDbHelper(this);
 
             initViews();
             setupRecyclerView();
@@ -84,9 +84,9 @@ public class UserDetailActivity extends AppCompatActivity {
     private void loadData() {
         if (userId == null) return;
 
-        String today = FirestoreHelper.getTodayDate();
+        String today = SupabaseDbHelper.getTodayDate();
         firestoreHelper.getUsageDataForDate(userId, today,
-                new FirestoreHelper.FirestoreCallback<List<UsageData>>() {
+                new SupabaseDbHelper.FirestoreCallback<List<UsageData>>() {
                     @Override
                     public void onSuccess(List<UsageData> result) {
                         adapter.updateUsageData(result != null ? result : new ArrayList<>());
@@ -103,7 +103,7 @@ public class UserDetailActivity extends AppCompatActivity {
 
     private void loadLimits() {
         firestoreHelper.getAppLimits(userId,
-                new FirestoreHelper.FirestoreCallback<List<AppLimit>>() {
+                new SupabaseDbHelper.FirestoreCallback<List<AppLimit>>() {
                     @Override
                     public void onSuccess(List<AppLimit> result) {
                         adapter.updateLimits(result != null ? result : new ArrayList<>());
@@ -121,7 +121,7 @@ public class UserDetailActivity extends AppCompatActivity {
         try {
             TimePickerDialog dialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
                 long limitMillis = (hourOfDay * 60L + minute) * 60 * 1000;
-                String adminUid = new FirebaseAuthHelper(this).getCurrentUid();
+                String adminUid = new SupabaseAuthHelper(this).getCurrentUid();
 
                 AppLimit limit = new AppLimit(
                         usageData.getAppName(),
@@ -130,7 +130,7 @@ public class UserDetailActivity extends AppCompatActivity {
                 );
 
                 firestoreHelper.setAppLimit(userId, limit,
-                        new FirestoreHelper.FirestoreCallback<Void>() {
+                        new SupabaseDbHelper.FirestoreCallback<Void>() {
                             @Override
                             public void onSuccess(Void result) {
                                 Toast.makeText(UserDetailActivity.this,
@@ -155,7 +155,7 @@ public class UserDetailActivity extends AppCompatActivity {
 
     private void toggleBlock(UsageData usageData, boolean block) {
         try {
-            String adminUid = new FirebaseAuthHelper(this).getCurrentUid();
+            String adminUid = new SupabaseAuthHelper(this).getCurrentUid();
             AppLimit limit = new AppLimit(
                     usageData.getAppName(),
                     usageData.getPackageName(),
@@ -163,7 +163,7 @@ public class UserDetailActivity extends AppCompatActivity {
             );
 
             firestoreHelper.setAppLimit(userId, limit,
-                    new FirestoreHelper.FirestoreCallback<Void>() {
+                    new SupabaseDbHelper.FirestoreCallback<Void>() {
                         @Override
                         public void onSuccess(Void result) {
                             Toast.makeText(UserDetailActivity.this,
@@ -183,3 +183,4 @@ public class UserDetailActivity extends AppCompatActivity {
         }
     }
 }
+

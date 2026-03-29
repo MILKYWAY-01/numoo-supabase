@@ -11,8 +11,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.numoo.R;
-import com.example.numoo.firebase.FirebaseAuthHelper;
-import com.example.numoo.firebase.FirestoreHelper;
+import com.example.numoo.supabase.SupabaseAuthHelper;
+import com.example.numoo.supabase.SupabaseDbHelper;
 import com.example.numoo.models.NotificationRequest;
 import com.google.android.material.button.MaterialButton;
 
@@ -113,8 +113,8 @@ public class BlockActivity extends AppCompatActivity {
 
     private void requestMoreTime() {
         try {
-            FirebaseAuthHelper authHelper = new FirebaseAuthHelper(this);
-            FirestoreHelper firestoreHelper = new FirestoreHelper(this);
+            SupabaseAuthHelper authHelper = new SupabaseAuthHelper(this);
+            SupabaseDbHelper firestoreHelper = new SupabaseDbHelper(this);
 
             String uid = authHelper.getCurrentUid();
             String userName = authHelper.getCachedUserName();
@@ -131,7 +131,7 @@ public class BlockActivity extends AppCompatActivity {
             );
 
             firestoreHelper.sendTimeRequest(adminId, request,
-                    new FirestoreHelper.FirestoreCallback<Void>() {
+                    new SupabaseDbHelper.FirestoreCallback<Void>() {
                         @Override
                         public void onSuccess(Void result) {
                             Toast.makeText(BlockActivity.this,
@@ -165,6 +165,8 @@ public class BlockActivity extends AppCompatActivity {
     public void onBackPressed() {
         // Override back to go home instead of back to blocked app
         goHome();
+        // Call through so lint (MissingSuperCall) and the framework behavior stay consistent.
+        super.onBackPressed();
     }
 
     @Override
@@ -182,3 +184,4 @@ public class BlockActivity extends AppCompatActivity {
         return minutes + "m";
     }
 }
+

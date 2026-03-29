@@ -7,8 +7,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.numoo.firebase.FirebaseAuthHelper;
-import com.example.numoo.firebase.FirestoreHelper;
+import com.example.numoo.supabase.SupabaseAuthHelper;
+import com.example.numoo.supabase.SupabaseDbHelper;
 import com.example.numoo.models.AppLimit;
 import com.example.numoo.models.UsageData;
 
@@ -23,13 +23,13 @@ public class UserDashboardViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     private final MutableLiveData<String> error = new MutableLiveData<>();
 
-    private final FirestoreHelper firestoreHelper;
-    private final FirebaseAuthHelper authHelper;
+    private final SupabaseDbHelper firestoreHelper;
+    private final SupabaseAuthHelper authHelper;
 
     public UserDashboardViewModel(@NonNull Application application) {
         super(application);
-        firestoreHelper = new FirestoreHelper(application);
-        authHelper = new FirebaseAuthHelper(application);
+        firestoreHelper = new SupabaseDbHelper(application);
+        authHelper = new SupabaseAuthHelper(application);
     }
 
     public LiveData<List<UsageData>> getUsageDataList() { return usageDataList; }
@@ -47,9 +47,9 @@ public class UserDashboardViewModel extends AndroidViewModel {
         if (uid == null) return;
 
         isLoading.setValue(true);
-        String today = FirestoreHelper.getTodayDate();
+        String today = SupabaseDbHelper.getTodayDate();
 
-        firestoreHelper.getUsageDataForDate(uid, today, new FirestoreHelper.FirestoreCallback<List<UsageData>>() {
+        firestoreHelper.getUsageDataForDate(uid, today, new SupabaseDbHelper.FirestoreCallback<List<UsageData>>() {
             @Override
             public void onSuccess(List<UsageData> result) {
                 usageDataList.postValue(result != null ? result : new ArrayList<>());
@@ -76,7 +76,7 @@ public class UserDashboardViewModel extends AndroidViewModel {
         String uid = authHelper.getCurrentUid();
         if (uid == null) return;
 
-        firestoreHelper.listenToLimits(uid, new FirestoreHelper.FirestoreCallback<List<AppLimit>>() {
+        firestoreHelper.listenToLimits(uid, new SupabaseDbHelper.FirestoreCallback<List<AppLimit>>() {
             @Override
             public void onSuccess(List<AppLimit> result) {
                 appLimits.postValue(result);
@@ -100,3 +100,4 @@ public class UserDashboardViewModel extends AndroidViewModel {
         firestoreHelper.removeLimitsListener();
     }
 }
+

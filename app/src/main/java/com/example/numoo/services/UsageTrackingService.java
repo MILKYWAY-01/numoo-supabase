@@ -20,8 +20,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.example.numoo.R;
-import com.example.numoo.firebase.FirebaseAuthHelper;
-import com.example.numoo.firebase.FirestoreHelper;
+import com.example.numoo.supabase.SupabaseAuthHelper;
+import com.example.numoo.supabase.SupabaseDbHelper;
 import com.example.numoo.models.UsageData;
 
 import java.util.Calendar;
@@ -38,16 +38,16 @@ public class UsageTrackingService extends Service {
 
     private Handler handler;
     private Runnable trackRunnable;
-    private FirestoreHelper firestoreHelper;
-    private FirebaseAuthHelper authHelper;
+    private SupabaseDbHelper firestoreHelper;
+    private SupabaseAuthHelper authHelper;
 
     @Override
     public void onCreate() {
         super.onCreate();
         try {
             handler = new Handler(Looper.getMainLooper());
-            firestoreHelper = new FirestoreHelper(this);
-            authHelper = new FirebaseAuthHelper(this);
+            firestoreHelper = new SupabaseDbHelper(this);
+            authHelper = new SupabaseAuthHelper(this);
             createNotificationChannel();
         } catch (Exception e) {
             Log.e(TAG, "Error in onCreate", e);
@@ -195,3 +195,4 @@ public class UsageTrackingService extends Service {
                 .build();
     }
 }
+

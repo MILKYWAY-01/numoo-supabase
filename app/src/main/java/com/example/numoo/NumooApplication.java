@@ -1,20 +1,17 @@
 package com.example.numoo;
 
 import android.app.Application;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.example.numoo.supabase.SupabaseClientConfig;
 
 public class NumooApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        // Enable Firestore offline persistence
+        // Initialize Supabase client
         try {
-            FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                    .setPersistenceEnabled(true)
-                    .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
-                    .build();
-            FirebaseFirestore.getInstance().setFirestoreSettings(settings);
+            // Supabase client is initialized lazily via SupabaseClientConfig.client
+            // This ensures the client is ready when needed
+            SupabaseClientConfig.INSTANCE.getClient();
         } catch (Exception e) {
             e.printStackTrace();
         }

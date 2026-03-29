@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.numoo.R;
-import com.example.numoo.firebase.FirebaseAuthHelper;
-import com.example.numoo.firebase.FirestoreHelper;
+import com.example.numoo.supabase.SupabaseAuthHelper;
+import com.example.numoo.supabase.SupabaseDbHelper;
 import com.example.numoo.models.UsageData;
 import com.example.numoo.viewmodels.ReportsViewModel;
 import com.github.mikephil.charting.charts.BarChart;
@@ -28,6 +28,7 @@ import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,7 +48,7 @@ public class ReportsActivity extends AppCompatActivity {
 
         try {
             viewModel = new ViewModelProvider(this).get(ReportsViewModel.class);
-            selectedDate = FirestoreHelper.getTodayDate();
+            selectedDate = SupabaseDbHelper.getTodayDate();
 
             initViews();
             observeViewModel();
@@ -116,7 +117,7 @@ public class ReportsActivity extends AppCompatActivity {
 
     private void loadReport() {
         try {
-            FirebaseAuthHelper authHelper = new FirebaseAuthHelper(this);
+            SupabaseAuthHelper authHelper = new SupabaseAuthHelper(this);
             String uid = authHelper.getCurrentUid();
             if (uid != null) {
                 viewModel.loadReportForUser(uid, selectedDate);
@@ -154,7 +155,9 @@ public class ReportsActivity extends AppCompatActivity {
     private void updateChart(List<UsageData> data) {
         try {
             // Sort by usage time descending, take top 10
-            data.sort((a, b) -> Long.compare(b.getUsageTimeMillis(), a.getUsageTimeMillis()));
+            Collections.sort(data, (a, b) ->
+                    Long.compare(b.getUsageTimeMillis(), a.getUsageTimeMillis())
+            );
             List<UsageData> top = data.subList(0, Math.min(10, data.size()));
 
             ArrayList<BarEntry> entries = new ArrayList<>();
@@ -219,3 +222,4 @@ public class ReportsActivity extends AppCompatActivity {
         }
     }
 }
+
