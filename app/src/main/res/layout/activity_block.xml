@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:background="#CC000000">
+
+    <ImageView
+        android:id="@+id/iv_app_icon"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/tv_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="App Name"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="⛔ Time limit reached!"
+        android:textColor="#FF6B6B"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_usage_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Used: 0m / Limit: 0m"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:alpha="0.9" />
+
+    <TextView
+        android:id="@+id/tv_countdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Resets in: 00:00:00"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:background="#33FFFFFF"
+        android:padding="12dp"
+        android:alpha="0.8" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_request_time"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="32dp"
+        android:text="🕐 Request More Time"
+        android:textSize="16sp"
+        android:backgroundTint="#4CAF50" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_go_home"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="12dp"
+        android:text="Go Home"
+        android:textColor="@android:color/white"
+        app:strokeColor="@android:color/white"
+        xmlns:app="http://schemas.android.com/apk/res-auto" />
+
+</LinearLayout>

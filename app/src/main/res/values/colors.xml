@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6750A4</color>
+    <color name="colorPrimaryDark">#4F378B</color>
+    <color name="colorPrimaryContainer">#EADDFF</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorSecondary">#625B71</color>
+    <color name="colorSecondaryContainer">#E8DEF8</color>
+    <color name="colorTertiary">#7D5260</color>
+    <color name="colorError">#B3261E</color>
+    <color name="colorSurface">#FFFBFE</color>
+    <color name="colorOnSurface">#1C1B1F</color>
+    <color name="colorOutline">#79747E</color>
+    <color name="colorSurfaceVariant">#E7E0EC</color>
+
+    <!-- Dark theme -->
+    <color name="colorPrimaryDark_night">#D0BCFF</color>
+    <color name="colorSurfaceDark">#1C1B1F</color>
+    <color name="colorOnSurfaceDark">#E6E1E5</color>
+
+    <!-- Status colors -->
+    <color name="statusActive">#4CAF50</color>
+    <color name="statusLimited">#FF9800</color>
+    <color name="statusBlocked">#F44336</color>
+</resources>

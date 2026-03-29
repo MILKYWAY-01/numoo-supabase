@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Numoo</string>
+    <string name="tagline">Protect. Monitor. Control.</string>
+
+    <!-- Auth -->
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="full_name">Full Name</string>
+    <string name="username">Username</string>
+    <string name="admin_code">Admin Code</string>
+    <string name="logout">Logout</string>
+
+    <!-- Roles -->
+    <string name="role_admin">Admin</string>
+    <string name="role_user">User</string>
+
+    <!-- Permissions -->
+    <string name="usage_access">Usage Access</string>
+    <string name="overlay_permission">Display Over Other Apps</string>
+    <string name="accessibility_service">Accessibility Service</string>
+    <string name="battery_optimization">Battery Optimization</string>
+
+    <!-- Dashboard -->
+    <string name="total_screen_time">Total Screen Time</string>
+    <string name="no_limit">No limit</string>
+    <string name="status_active">ACTIVE</string>
+    <string name="status_limited">LIMITED</string>
+    <string name="status_blocked">BLOCKED</string>
+
+    <!-- Block screen -->
+    <string name="time_limit_reached">Time limit reached!</string>
+    <string name="request_more_time">Request More Time</string>
+    <string name="go_home">Go Home</string>
+
+    <!-- Reports -->
+    <string name="reports">Reports</string>
+    <string name="export_csv">Export CSV</string>
+
+    <!-- Service -->
+    <string name="tracking_notification_title">Numoo</string>
+    <string name="tracking_notification_text">Numoo is protecting your device</string>
+    <string name="accessibility_service_description">Numoo App Blocker monitors which app is currently in use to enforce time limits set by your administrator.</string>
+</resources>
