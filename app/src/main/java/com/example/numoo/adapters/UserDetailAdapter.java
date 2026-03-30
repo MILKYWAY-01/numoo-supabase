@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -118,6 +119,21 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.Vi
             for (AppLimit l : limits) {
                 limitsMap.put(l.getPackageName(), l);
             }
+        }
+        notifyDataSetChanged();
+    }
+
+    @Nullable
+    public AppLimit getLimitForPackage(String packageName) {
+        if (packageName == null) return null;
+        return limitsMap.get(packageName);
+    }
+
+    /** Call after a failed block/unblock API request to sync the switch with server state. */
+    public void revertBlockToggle(String packageName, boolean blocked) {
+        AppLimit l = limitsMap.get(packageName);
+        if (l != null) {
+            l.setBlocked(blocked);
         }
         notifyDataSetChanged();
     }
