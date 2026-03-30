@@ -21,6 +21,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.HashMap
 import java.util.Locale
 
 @Serializable
@@ -107,6 +108,28 @@ class SupabaseDbHelper(context: Context) {
                     ud
                 }
                 withContext(Dispatchers.Main) { callback.onSuccess(list) }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) { callback.onError(e.message) }
+            }
+        }
+    }
+
+    /**
+     * Sums [usage_time_millis] per [SupabaseUsageDataDto.uid] for one calendar [date].
+     * RLS returns only rows the current user may see (e.g. admin → linked users).
+     */
+    fun getUsageTotalsByUserForDate(date: String, callback: FirestoreCallback<HashMap<String, Long>>) {
+        scope.launch {
+            try {
+                val result = client.postgrest["usage_data"]
+                    .select { filter { eq("date", date) } }
+                    .decodeList<SupabaseUsageDataDto>()
+                val totals = HashMap<String, Long>()
+                for (dto in result) {
+                    val u = dto.uid
+                    totals[u] = (totals[u] ?: 0L) + dto.usageTimeMillis
+                }
+                withContext(Dispatchers.Main) { callback.onSuccess(totals) }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) { callback.onError(e.message) }
             }

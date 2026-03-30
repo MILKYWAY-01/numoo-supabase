@@ -12,6 +12,8 @@ public class User {
     private String adminId;
     private String adminCode;
     private long createdAt;
+    /** Total screen time today (ms), from usage_data — UI only, not stored in DB. */
+    private long todayUsageMillis;
 
     public User() {
         // Required empty constructor for Firestore
@@ -67,4 +69,7 @@ public class User {
 
     public long getCreatedAt() { return createdAt; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+
+    public long getTodayUsageMillis() { return todayUsageMillis; }
+    public void setTodayUsageMillis(long todayUsageMillis) { this.todayUsageMillis = todayUsageMillis; }
 }
