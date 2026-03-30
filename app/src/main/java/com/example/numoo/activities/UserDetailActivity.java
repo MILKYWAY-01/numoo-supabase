@@ -119,14 +119,26 @@ public class UserDetailActivity extends AppCompatActivity {
 
     private void showTimePickerForLimit(UsageData usageData) {
         try {
+            AppLimit existing = adapter.getLimitForPackage(usageData.getPackageName());
+            long existingMs = existing != null ? existing.getLimitMillis() : 0L;
+            int startHour = (int) (existingMs / (60L * 60 * 1000));
+            int startMinute = (int) ((existingMs / (60 * 1000)) % 60);
+
             TimePickerDialog dialog = new TimePickerDialog(this, (view, hourOfDay, minute) -> {
                 long limitMillis = (hourOfDay * 60L + minute) * 60 * 1000;
+                if (limitMillis <= 0) {
+                    Toast.makeText(UserDetailActivity.this,
+                            "Choose a limit greater than 0 hours and 0 minutes.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String adminUid = new SupabaseAuthHelper(this).getCurrentUid();
+                boolean keepBlocked = existing != null && existing.isBlocked();
 
                 AppLimit limit = new AppLimit(
                         usageData.getAppName(),
                         usageData.getPackageName(),
-                        limitMillis, false, adminUid
+                        limitMillis, keepBlocked, adminUid
                 );
 
                 firestoreHelper.setAppLimit(userId, limit,
@@ -145,8 +157,8 @@ public class UserDetailActivity extends AppCompatActivity {
                                         "Error: " + error, Toast.LENGTH_SHORT).show();
                             }
                         });
-            }, 1, 0, true);
-            dialog.setTitle("Set time limit for " + usageData.getAppName());
+            }, startHour, startMinute, true);
+            dialog.setTitle("Daily limit (hours : minutes) — " + usageData.getAppName());
             dialog.show();
         } catch (Exception e) {
             Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -156,10 +168,13 @@ public class UserDetailActivity extends AppCompatActivity {
     private void toggleBlock(UsageData usageData, boolean block) {
         try {
             String adminUid = new SupabaseAuthHelper(this).getCurrentUid();
+            AppLimit existing = adapter.getLimitForPackage(usageData.getPackageName());
+            long limitMillis = existing != null ? existing.getLimitMillis() : 0L;
+
             AppLimit limit = new AppLimit(
                     usageData.getAppName(),
                     usageData.getPackageName(),
-                    0, block, adminUid
+                    limitMillis, block, adminUid
             );
 
             firestoreHelper.setAppLimit(userId, limit,
@@ -174,6 +189,7 @@ public class UserDetailActivity extends AppCompatActivity {
 
                         @Override
                         public void onError(String error) {
+                            adapter.revertBlockToggle(usageData.getPackageName(), !block);
                             Toast.makeText(UserDetailActivity.this,
                                     "Error: " + error, Toast.LENGTH_SHORT).show();
                         }

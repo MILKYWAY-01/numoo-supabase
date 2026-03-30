@@ -84,7 +84,10 @@ class SupabaseDbHelper(context: Context) {
                     lastUpdated = usageData.lastUpdated
                 )
                 // Upsert based on composite key (uid, date, packageName)
-                client.postgrest["usage_data"].upsert(dto)
+                client.postgrest["usage_data"].upsert(
+                    dto,
+                    onConflict = "uid,date,package_name"
+                )
             } catch (e: Exception) {
                 Log.e(TAG, "Sync failed for " + usageData.packageName, e)
             }
@@ -124,7 +127,10 @@ class SupabaseDbHelper(context: Context) {
                     setBy = limit.setBy ?: "",
                     updatedAt = limit.updatedAt
                 )
-                client.postgrest["app_limits"].upsert(dto)
+                client.postgrest["app_limits"].upsert(
+                    dto,
+                    onConflict = "user_id,package_name"
+                )
                 withContext(Dispatchers.Main) { callback.onSuccess(null) }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) { callback.onError(e.message) }

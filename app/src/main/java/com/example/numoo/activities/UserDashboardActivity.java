@@ -28,6 +28,10 @@ import java.util.Locale;
 
 public class UserDashboardActivity extends AppCompatActivity {
 
+    /** Opened from AppBlockerService when user tries to open an admin-blocked app. */
+    public static final String EXTRA_REDIRECT_FROM_BLOCKED_APP = "redirect_from_blocked_app";
+    public static final String EXTRA_BLOCKED_APP_NAME = "blocked_app_name";
+
     private UserDashboardViewModel viewModel;
     private AppUsageAdapter adapter;
     private RecyclerView recyclerView;
@@ -48,9 +52,28 @@ public class UserDashboardActivity extends AppCompatActivity {
             startTrackingService();
             viewModel.loadUsageData();
             viewModel.loadLimits();
+            showRedirectFromBlockedAppIfNeeded();
         } catch (Exception e) {
             Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void showRedirectFromBlockedAppIfNeeded() {
+        Intent intent = getIntent();
+        if (intent == null || !intent.getBooleanExtra(EXTRA_REDIRECT_FROM_BLOCKED_APP, false)) {
+            return;
+        }
+        String appLabel = intent.getStringExtra(EXTRA_BLOCKED_APP_NAME);
+        if (appLabel == null || appLabel.isEmpty()) {
+            appLabel = "This app";
+        }
+        Toast.makeText(
+                this,
+                appLabel + " is blocked by your admin. You can review limits here.",
+                Toast.LENGTH_LONG
+        ).show();
+        intent.removeExtra(EXTRA_REDIRECT_FROM_BLOCKED_APP);
+        intent.removeExtra(EXTRA_BLOCKED_APP_NAME);
     }
 
     private void initViews() {
