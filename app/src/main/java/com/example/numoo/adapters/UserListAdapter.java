@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.numoo.R;
+import com.example.numoo.activities.UserDashboardActivity;
 import com.example.numoo.models.User;
 
 import java.util.ArrayList;
@@ -47,6 +48,13 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
             holder.tvUsername.setText(user.getUsername() != null ? "@" + user.getUsername() : "");
             holder.tvEmail.setText(user.getEmail() != null ? user.getEmail() : "");
 
+            long usageMs = user.getTodayUsageMillis();
+            if (usageMs > 0) {
+                holder.tvTodayUsage.setText("Today: " + UserDashboardActivity.formatTime(usageMs) + " screen time");
+            } else {
+                holder.tvTodayUsage.setText("Today: no usage synced yet");
+            }
+
             // Initial avatar
             String name = user.getName();
             if (name != null && !name.isEmpty()) {
@@ -76,13 +84,14 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvUsername, tvEmail, tvAvatar;
+        TextView tvName, tvUsername, tvEmail, tvTodayUsage, tvAvatar;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_name);
             tvUsername = itemView.findViewById(R.id.tv_username);
             tvEmail = itemView.findViewById(R.id.tv_email);
+            tvTodayUsage = itemView.findViewById(R.id.tv_today_usage);
             tvAvatar = itemView.findViewById(R.id.tv_avatar);
         }
     }

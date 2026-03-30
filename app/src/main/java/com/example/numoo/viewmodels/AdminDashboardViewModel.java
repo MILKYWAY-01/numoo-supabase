@@ -12,6 +12,7 @@ import com.example.numoo.supabase.SupabaseDbHelper;
 import com.example.numoo.models.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AdminDashboardViewModel extends AndroidViewModel {
@@ -66,8 +67,28 @@ public class AdminDashboardViewModel extends AndroidViewModel {
         firestoreHelper.getLinkedUsers(uid, new SupabaseDbHelper.FirestoreCallback<List<User>>() {
             @Override
             public void onSuccess(List<User> result) {
-                linkedUsers.postValue(result != null ? result : new ArrayList<>());
-                isLoading.postValue(false);
+                List<User> users = result != null ? result : new ArrayList<>();
+                String today = SupabaseDbHelper.getTodayDate();
+                firestoreHelper.getUsageTotalsByUserForDate(today,
+                        new SupabaseDbHelper.FirestoreCallback<HashMap<String, Long>>() {
+                            @Override
+                            public void onSuccess(HashMap<String, Long> totals) {
+                                if (totals != null) {
+                                    for (User u : users) {
+                                        Long t = totals.get(u.getUid());
+                                        u.setTodayUsageMillis(t != null ? t : 0L);
+                                    }
+                                }
+                                linkedUsers.postValue(users);
+                                isLoading.postValue(false);
+                            }
+
+                            @Override
+                            public void onError(String err) {
+                                linkedUsers.postValue(users);
+                                isLoading.postValue(false);
+                            }
+                        });
             }
 
             @Override

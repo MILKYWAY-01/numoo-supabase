@@ -67,6 +67,15 @@
                 android:text="email@example.com"
                 android:textSize="12sp"
                 android:textColor="?android:attr/textColorSecondary" />
+
+            <TextView
+                android:id="@+id/tv_today_usage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Today: —"
+                android:textSize="13sp"
+                android:textColor="?attr/colorPrimary" />
         </LinearLayout>
 
         <ImageView
